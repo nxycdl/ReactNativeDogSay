@@ -161,4 +161,5 @@ const styles = StyleSheet.create({
         fontSize: 8,
     }
 });
+
 AppRegistry.registerComponent('ReactNativeDogSay', () => ReactNativeDogSay);
