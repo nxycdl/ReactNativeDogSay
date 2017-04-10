@@ -7,36 +7,167 @@ import {
     Platform,
     ScrollView,
     AlertIOS,
-    Button,
     RefreshControl,
     TouchableHighlight,
-    TouchableNativeFeedback
+    TouchableNativeFeedback,
+    TextInput
 } from 'react-native'
 
-import {ListItem, CheckBox} from 'react-native-elements'
+import {Button as EButton, ListItem, CheckBox} from 'react-native-elements'
 import {SocialIcon} from 'react-native-elements'
 import px2dp from '../util'
+import Button from './Button'
+import {Isao} from 'react-native-textinput-effects';
+var ImagePicker = require('react-native-image-picker');
 /**
  * 优化改进意见;
  */
 export default class Optimization extends Component {
+
+
     constructor(props) {
         super(props)
         this.state = {
-            tag: 0
+            tag: 0,
+            textInputHeight: 30,
+            maxUploadImage: 10,
+            avatarSourceList: [],
+            avatarSource: ''
         }
     }
 
+    componentWillMount() {
+        this.setState({tag: 1});
+    }
+
+    textInputOnChange(event) {
+        let height = 0;
+        if (event.nativeEvent.contentSize.height > 30) {//此处是判断 是否大于我设置的input默认高度，如果大于则使用input的内容高度
+            height = event.nativeEvent.contentSize.height;//内容高度
+        } else {
+            height = this.state.height;
+        }
+        this.setState({
+                textInputHeight: height
+            }
+        );
+    }
+
+    showImagePicker(event) {
+        var _this = event;
+        /**
+         * The first arg is the options object for customization (it can also be null or omitted for default options),
+         * The second arg is the callback which sends object: response (more info below in README)
+         */
+
+        /**
+         * 摄像机默认属性;
+         * @type {{title: string, customButtons: [*], storageOptions: {skipBackup: boolean, path: string}}}
+         */
+        var options = {
+            title:'',
+            cancelButtonTitle: '取消',
+            takePhotoButtonTitle:'拍照',
+            chooseFromLibraryButtonTitle: '从相册选择',
+            storageOptions: {
+                skipBackup: false,
+                path: 'images'
+            }
+        };
+
+
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                let source = {uri: response.uri};
+                // You can also display the image using data:
+                // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+                //var list = _this.state.avatarSourceList.push(source);
+                this.setState({
+                    avatarSource: source
+                });
+
+                var avatarSourceList = this.state.avatarSourceList;
+                avatarSourceList.push(source);
+                this.setState({
+                    avatarSourceList: avatarSourceList
+                });
+            }
+        });
+    }
+
+    _renderImageItem(item) {
+        return <Image source={item} style={styles.uploadAvatar}/>
+    }
+
+    _renderImageList() {
+        if (this.state.avatarSourceList.length > 0) {
+            return this.state.avatarSourceList.map(item => this._renderImageItem(item));
+        }
+        //return
+    }
+
+
     render() {
         return (
-            <View style={{flex: 1}}>
-                <ListItem
-                    title="你好"
-                />
-                <Button buttonStyle={styles.button}
-                        title='BUTTON18'/>
+            <ScrollView>
+                <View style={{flex: 1,marginBottom:60}}>
+                    <ListItem titleStyle={{fontSize: px2dp(13)}}
+                              title="你好"
+                    />
+                    <View style={[styles.item, {alignItems: "center"}]}>
+                        <Text style={{fontSize: px2dp(13), color: "#222", minWidth: 45, marginLeft: 20}}>{"类型"}</Text>
+                        <View style={{flexDirection: "row", flex: 1}}>
+                            <Button style={{marginLeft: 10}} onPress={() => {
+                                this.setState({tag: 0})
+                            }}>
+                                <Text style={[styles.radio, this.state.tag === 0 ? styles.active : null]}>{"意见"}</Text>
+                            </Button>
+                            <Button style={{marginLeft: 10}} onPress={() => {
+                                this.setState({tag: 1})
+                            }}>
+                                <Text style={[styles.radio, this.state.tag === 1 ? styles.active : null]}>{"BUG"}</Text>
+                            </Button>
+                        </View>
+                    </View>
+                    <View style={styles.item}>
+                        <Text style={styles.label}>{"门牌号"}</Text>
+                        <View style={{flex: 1}}>
+                            <TextInput numberOfLines={4}
+                                       multiline={true}
+                                       underlineColorAndroid="transparent"
+                                // style={[styles.textInput, styles.textInputBorder,{height:this.state.textInputHeight}]}
+                                       style={[{height: this.state.textInputHeight}, styles.textInputBorder]}
+                                       placeholder="请输入您的意见"
+                                       placeholderTextColor="#aaa" onChange={this.textInputOnChange.bind(this)}/>
+                        </View>
+                    </View>
+                    <ListItem titleStyle={{fontSize: px2dp(13)}}
+                              rightIcon={{color: '#fff'}}
+                              title="图片上传22"
+                              rightTitle={this.state.tag + '/' + this.state.maxUploadImage}
+                              rightTitleStyle={{color: 'red'}}
+                    />
+                    <View style={{alignItems: "center"}}>
+                        {this._renderImageList()}
+                        {/*<Image source={this.state.avatarSourceList[1]} style={styles.uploadAvatar}/>*/}
 
-            </View>
+
+                    </View>
+                    <EButton buttonStyle={styles.button}
+                             title='点击选择图片' onPress={this.showImagePicker.bind(this)}/>
+                </View>
+            </ScrollView>
         )
     }
 }
@@ -45,7 +176,18 @@ export default class Optimization extends Component {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: '#397af8',
-        borderRadius: 25, marginLeft: 0, marginRight: 0, marginBottom: 0
+        borderRadius: 25,
+        marginLeft: 5,
+        marginRight: 5,
+        marginBottom: 0,
+        marginTop:10
+    },
+    item: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#f8f8f8",
+        paddingVertical: 10,
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     radio: {
         paddingHorizontal: 8,
@@ -61,4 +203,33 @@ const styles = StyleSheet.create({
         borderColor: "#81c2ff",
         color: "#0096ff"
     },
+    textInput: {
+        flex: 1,
+        paddingVertical: 0,
+        fontSize: px2dp(13),
+        paddingHorizontal: 10
+    },
+    textInputBorder: {
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        color: "#666",
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        fontSize: px2dp(13),
+        backgroundColor: "#fff",
+        borderColor: "#81c2ff",
+    },
+    label: {
+        marginLeft: 20,
+        minWidth: 45,
+        fontSize: px2dp(13),
+        color: "#222",
+        paddingTop: 8
+    },
+    uploadAvatar: {
+        justifyContent: "center",
+        width: 200,
+        height: 200
+    }
 })
