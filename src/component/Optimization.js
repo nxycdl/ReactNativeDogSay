@@ -10,7 +10,8 @@ import {
     RefreshControl,
     TouchableHighlight,
     TouchableNativeFeedback,
-    TextInput
+    TextInput,
+    Dimensions
 } from 'react-native'
 
 import {Button as EButton, ListItem, CheckBox} from 'react-native-elements'
@@ -18,7 +19,11 @@ import {SocialIcon} from 'react-native-elements'
 import px2dp from '../util'
 import Button from './Button'
 import {Isao} from 'react-native-textinput-effects';
-var ImagePicker = require('react-native-image-picker');
+import ImagePicker from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/FontAwesome';
+const isIOS = Platform.OS == "ios"
+const { width, height } = Dimensions.get('window')
+import _ from 'lodash';
 /**
  * 优化改进意见;
  */
@@ -65,9 +70,9 @@ export default class Optimization extends Component {
          * @type {{title: string, customButtons: [*], storageOptions: {skipBackup: boolean, path: string}}}
          */
         var options = {
-            title:'',
+            title: '',
             cancelButtonTitle: '取消',
-            takePhotoButtonTitle:'拍照',
+            takePhotoButtonTitle: '拍照',
             chooseFromLibraryButtonTitle: '从相册选择',
             storageOptions: {
                 skipBackup: false,
@@ -106,13 +111,28 @@ export default class Optimization extends Component {
         });
     }
 
-    _renderImageItem(item) {
-        return <Image source={item} style={styles.uploadAvatar}/>
+    _removeImage(item) {
+        var avatarSourceList = this.state.avatarSourceList;
+        console.log('x');
+        _.remove(avatarSourceList, item);
+        this.setState({
+            avatarSourceList: avatarSourceList
+        });
+    }
+
+    _renderImageItem(item, i) {
+        return (<View key={i} style={styles.imglist}>
+                <Image source={item} style={styles.uploadAvatar}/>
+                <Text style={styles.remove} onPress={this._removeImage.bind(this, item)}><Icon name="times"
+                                                                                               color="#4F8EF7"
+                                                                                               size={px2dp(26)}/></Text>
+            </View>
+        )
     }
 
     _renderImageList() {
         if (this.state.avatarSourceList.length > 0) {
-            return this.state.avatarSourceList.map(item => this._renderImageItem(item));
+            return this.state.avatarSourceList.map((item, i) => this._renderImageItem(item, i));
         }
         //return
     }
@@ -121,9 +141,9 @@ export default class Optimization extends Component {
     render() {
         return (
             <ScrollView>
-                <View style={{flex: 1,marginBottom:60}}>
+                <View style={{flex: 1, marginBottom: 60}}>
                     <ListItem titleStyle={{fontSize: px2dp(13)}}
-                              title="你好"
+                              title="你好11"
                     />
                     <View style={[styles.item, {alignItems: "center"}]}>
                         <Text style={{fontSize: px2dp(13), color: "#222", minWidth: 45, marginLeft: 20}}>{"类型"}</Text>
@@ -153,10 +173,12 @@ export default class Optimization extends Component {
                         </View>
                     </View>
                     <ListItem titleStyle={{fontSize: px2dp(13)}}
-                              rightIcon={{color: '#fff'}}
-                              title="图片上传22"
-                              rightTitle={this.state.tag + '/' + this.state.maxUploadImage}
+                              plus
+                              title="图片上传"
+                              rightTitle={this.state.avatarSourceList.length + '/' + this.state.maxUploadImage}
                               rightTitleStyle={{color: 'red'}}
+                              onPress={this.showImagePicker.bind(this)}
+                              rightIcon={{name: 'add', color: '#397af8'}}
                     />
                     <View style={{alignItems: "center"}}>
                         {this._renderImageList()}
@@ -165,7 +187,7 @@ export default class Optimization extends Component {
 
                     </View>
                     <EButton buttonStyle={styles.button}
-                             title='点击选择图片' onPress={this.showImagePicker.bind(this)}/>
+                             title='提交' onPress={this.showImagePicker.bind(this)}/>
                 </View>
             </ScrollView>
         )
@@ -180,7 +202,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         marginBottom: 0,
-        marginTop:10
+        marginTop: 10
     },
     item: {
         borderBottomWidth: 1,
@@ -229,7 +251,18 @@ const styles = StyleSheet.create({
     },
     uploadAvatar: {
         justifyContent: "center",
-        width: 200,
-        height: 200
+        width: width -50 ,
+        height: width- 50
+    },
+    remove: {
+        position: 'absolute',
+        right: 0,
+        bottom: 0
+    },
+    imglist :{
+        marginTop:20,
+        borderBottomWidth: 1,
+        borderBottomColor:'red'
     }
+
 })
