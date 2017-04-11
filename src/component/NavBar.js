@@ -5,22 +5,22 @@
 'use strict';
 
 import React, {
-  Component,
-  PropTypes
+    Component,
+    PropTypes
 } from 'react'
 import {
-  StyleSheet,
-  View,
-  Text,
-  Animated,
-  TouchableOpacity,
-  TouchableNativeFeedback,
-  Platform
+    StyleSheet,
+    View,
+    Text,
+    Animated,
+    TouchableOpacity,
+    TouchableNativeFeedback,
+    Platform
 } from 'react-native'
 import px2dp from '../util'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-export default class NavBar extends Component{
+export default class NavBar extends Component {
     static propTypes = {
         title: PropTypes.string,
         leftIcon: PropTypes.string,
@@ -30,48 +30,53 @@ export default class NavBar extends Component{
         style: PropTypes.object
     }
     static topbarHeight = (Platform.OS === 'ios' ? 64 : 42)
-    renderBtn(pos){
-      let render = (obj) => {
-        const { name, onPress } = obj
-        if(Platform.OS === 'android'){
-          return (
-            <TouchableNativeFeedback onPress={onPress} style={styles.btn}>
-              <Icon name={name} size={px2dp(26)} color="#fff" />
-            </TouchableNativeFeedback>
-          )
-        }else{
-          return (
-            <TouchableOpacity onPress={onPress} style={styles.btn}>
-              <Icon name={name} size={px2dp(26)} color="#fff" />
-            </TouchableOpacity>
-          )
+
+    renderBtn(pos) {
+        let render = (obj) => {
+            const {name, onPress, rightTitle} = obj
+            if (Platform.OS === 'android') {
+                return (
+                    <TouchableNativeFeedback onPress={onPress} style={styles.btn}>
+                        <View>
+                            <Icon name={name} size={px2dp(26)} color="#fff"/>
+                        </View>
+                    </TouchableNativeFeedback>
+                )
+            } else {
+                return (
+                    <TouchableOpacity onPress={onPress} style={styles.btn}>
+                        <Icon name={name} size={px2dp(26)} color="#fff"/>
+                    </TouchableOpacity>
+                )
+            }
         }
-      }
-      if(pos == "left"){
-        if(this.props.leftIcon){
-          return render({
-            name: this.props.leftIcon,
-            onPress: this.props.leftPress
-          })
-        }else{
-          return (<View style={styles.btn}></View>)
+        if (pos == 'left') {
+            if (this.props.leftIcon) {
+                return render({
+                    name: this.props.leftIcon,
+                    onPress: this.props.leftPress
+                })
+            } else {
+                return (<View style={styles.btn}></View>)
+            }
+        } else if (pos == 'right') {
+            if (this.props.rightIcon) {
+                return render({
+                    name: this.props.rightIcon,
+                    onPress: this.props.rightPress
+                })
+            } else {
+                return (<View style={styles.btn}></View>)
+            }
         }
-      }else if(pos == "right"){
-        if(this.props.rightIcon){
-          return render({
-            name: this.props.rightIcon,
-            onPress: this.props.rightPress
-          })
-        }else{
-          return (<View style={styles.btn}></View>)
-        }
-      }
     }
-    render(){
-        return(
+
+    render() {
+        return (
             <View style={[styles.topbar, this.props.style]}>
                 {this.renderBtn("left")}
-                <Animated.Text numberOfLines={1} style={[styles.title, this.props.titleStyle]}>{this.props.title}</Animated.Text>
+                <Animated.Text numberOfLines={1}
+                               style={[styles.title, this.props.titleStyle]}>{this.props.title}</Animated.Text>
                 {this.renderBtn("right")}
             </View>
         )
@@ -89,12 +94,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: px2dp(10)
     },
     btn: {
-      width: 40,
-      height: 40,
-      justifyContent: 'center',
-      alignItems: 'center'
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    title:{
+    title: {
         color: "#fff",
         fontWeight: "bold",
         fontSize: px2dp(16),
