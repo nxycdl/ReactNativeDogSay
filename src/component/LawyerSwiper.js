@@ -9,10 +9,14 @@ import {
     AlertIOS,
     RefreshControl,
     TouchableHighlight,
-    TouchableNativeFeedback
+    TouchableNativeFeedback,
+    TouchableWithoutFeedback,
+    Navigator
 } from 'react-native'
 import Swiper from 'react-native-swiper';
 import px2dp from '../util'
+import request from '../util/request';
+import LawyerDetailPages from '../pages/LawyerDetailPages';
 let height = px2dp(80);
 
 export default class LawyerSwiper extends Component {
@@ -22,7 +26,30 @@ export default class LawyerSwiper extends Component {
             banner01: require('../images/banner/banner01.png'),
             banner02: require('../images/banner/banner02.png'),
             banner03: require('../images/banner/banner03.png'),
+            hotLawyerList: []
         }
+    }
+
+    _fetchLawerInfoList() {
+        request.get('', '/htgl/app/getweixintoplawerinfo.do', {limit: 5})
+            .then(data => {
+                if (data.err === '0') {
+                    let retlist = data.data;
+                    let hotLawyerList = this.state.hotLawyerList;
+                    hotLawyerList = hotLawyerList.concat(retlist);
+                    this.setState({
+                        hotLawyerList: hotLawyerList
+                    });
+                }
+            })
+            .catch(error => {
+                console.warn(error);
+            });
+
+    }
+
+    componentDidMount() {
+        this._fetchLawerInfoList();
     }
 
     _render() {
@@ -68,22 +95,38 @@ export default class LawyerSwiper extends Component {
         </ScrollView>
     }
 
-    _renderImageItem(item,key){
-        console.log(item);
+    _goPage(key, data = {}) {
+        let pages = {
+            "showLawyerDetail": LawyerDetailPages
+        }
+        if (pages[key]) {
+            this.props.navigator.push({
+                component: pages[key],
+                args: {data}
+            });
+        }
+    }
+
+    _renderImageItem(item, key) {
         return (
-            <View style={styles.slidewarp}>
-                {/*<Image source={item.url} style={styles.imageItem}></Image>*/}
-                <Text style={styles.text}>234234234</Text>
-            </View>
+            <TouchableWithoutFeedback key={key} onPress={this._goPage.bind(this, 'showLawyerDetail', {id: item[0]})}>
+                <View >
+                    <Image source={{uri: item[2]}} style={styles.imageItem}></Image>
+                    <Text style={styles.text}>{item[1]}</Text>
+                </View >
+            </TouchableWithoutFeedback>
         )
     }
 
     _renderData() {
-        if (this.props.imageList && this.props.imageList.length > 0) {
-            return <ScrollView>
-                this.props.imageList.map((item, i) => this._renderImageItem(item, i));
+        if (this.state.hotLawyerList && this.state.hotLawyerList.length > 0) {
+            return <ScrollView horizontal={true}>
+                <View style={styles.wrapper}>
+                    {this.state.hotLawyerList.map((item, i) => this._renderImageItem(item, i))}
+                </View>
             </ScrollView>
         }
+        return <ScrollView></ScrollView>
     }
 
     render() {
