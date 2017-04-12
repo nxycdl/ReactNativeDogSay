@@ -79,7 +79,7 @@ export default class LawyerSwiper extends Component {
     }
 
     _renderData() {
-        if (this.props.imageList.length > 0) {
+        if (this.props.imageList && this.props.imageList.length > 0) {
             return <ScrollView>
                 this.props.imageList.map((item, i) => this._renderImageItem(item, i));
             </ScrollView>
@@ -88,7 +88,7 @@ export default class LawyerSwiper extends Component {
 
     render() {
         return (
-            this._render()
+            this._renderData()
         )
     }
 }

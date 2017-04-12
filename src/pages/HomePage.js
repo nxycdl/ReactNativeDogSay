@@ -40,8 +40,12 @@ export default class index extends Component {
         request.get('', '/htgl/app/getweixintoplawerinfo.do', {limit: 5})
             .then(data => {
                 if (data.err === '0') {
+                    let retlist = data.data;
                     let hotLawyerList = this.state.hotLawyerList;
-                    hotLawyerList.concat(data.data);
+                    hotLawyerList = hotLawyerList.concat(retlist);
+                    console.log('01',retlist);
+                    console.log('02', retlist);
+                    console.log('03', hotLawyerList);
                     this.setState({
                         hotLawyerList: hotLawyerList
                     });
@@ -61,6 +65,13 @@ export default class index extends Component {
 
     _rightPress() {
         console.log('_rightPress');
+    }
+
+    _renderLawyer() {
+        if (this.state.hostLawyerList &&　this.state.hostLawyerList.length >0){
+           return <LawyerSwiper imageList={this.state.hostLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>
+        }
+        return <Text>xx</Text>
     }
 
     render() {
@@ -110,7 +121,10 @@ export default class index extends Component {
                                   itemHeight={px2dp(20)}></Item>
                         </View>
                         <View style={{backgroundColor: 'white', marginTop: 1, height: px2dp(100)}}>
-                            <LawyerSwiper imageList={this.state.hostLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>
+                            {/*{this.state.hostLawyerList &&　this.state.hostLawyerList.length >0}{
+                                <LawyerSwiper imageList={this.state.hostLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>
+                            }*/}
+                            this._renderLawyer()
                         </View>
                         <View style={styles.footer}>
                             <Text style={styles.footerText}>君子不立危险墙之下</Text>
