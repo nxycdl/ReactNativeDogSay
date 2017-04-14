@@ -27,36 +27,9 @@ export default class index extends Component {
         this.state = {
             title: '微建盾欢迎您',
             isLogin: false,
-            hotLawyerList: []
+            hotLawyerList: [],
+            infoList: [{}]
         }
-    }
-
-    componentDidMount() {
-        this._fetchLawerInfoList();
-    }
-
-    _fetchLawerInfoList() {
-        console.log('xxx');
-        request.get('', '/htgl/app/getweixintoplawerinfo.do', {limit: 5})
-            .then(data => {
-                if (data.err === '0') {
-                    let retlist = data.data;
-                    let hotLawyerList = this.state.hotLawyerList;
-                    hotLawyerList = hotLawyerList.concat(retlist);
-                    console.log('01',retlist);
-                    console.log('02', retlist);
-                    console.log('03', hotLawyerList);
-                    this.setState({
-                        hotLawyerList: hotLawyerList
-                    });
-                    console.log('1', hotLawyerList);
-                    console.log('2', this.state.hotLawyerList);
-                }
-            })
-            .catch(error => {
-                console.warn(error);
-            });
-
     }
 
     _leftPress() {
@@ -65,13 +38,6 @@ export default class index extends Component {
 
     _rightPress() {
         console.log('_rightPress');
-    }
-
-    _renderLawyer() {
-        if (this.state.hostLawyerList &&　this.state.hostLawyerList.length >0){
-           return <LawyerSwiper imageList={this.state.hostLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>
-        }
-        return <Text>xx</Text>
     }
 
     render() {
@@ -84,7 +50,7 @@ export default class index extends Component {
                         leftPress={this._leftPress.bind(this)}
                         rightPress={this._rightPress.bind(this)}></NavBar>
                 <MySwiperIndex></MySwiperIndex>
-                <ScrollView contentContainerStyle={{height: 1000}}>
+                <ScrollView contentContainerStyle={{height: 760}}>
                     <View style={{flex: 1, backgroundColor: '#ADADAD'}}>
                         <View style={styles.imageitem}>
                             <View style={{backgroundColor: 'white'}}>
@@ -121,10 +87,8 @@ export default class index extends Component {
                                   itemHeight={px2dp(20)}></Item>
                         </View>
                         <View style={{backgroundColor: 'white', marginTop: 1, height: px2dp(100)}}>
-                            {/*{this.state.hostLawyerList &&　this.state.hostLawyerList.length >0}{
-                                <LawyerSwiper imageList={this.state.hostLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>
-                            }*/}
-                            this._renderLawyer()
+                            {/*<LawyerSwiper imageList={this.state.hotLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>*/}
+                            <LawyerSwiper {...this.props} ></LawyerSwiper>
                         </View>
                         <View style={styles.footer}>
                             <Text style={styles.footerText}>君子不立危险墙之下</Text>
