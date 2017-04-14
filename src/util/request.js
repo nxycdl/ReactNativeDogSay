@@ -9,13 +9,20 @@ import Mock from 'mockjs';
 
 let request = {}
 
-request.get = function (url,path, params) {
-    url =  (url || config.serviceUrl) + path;
+request.get = function (url, path, params) {
+    url = (url || config.serviceUrl) + path;
     if (params) {
         url += '?' + queryString.stringify(params);
     }
+    console.log(url);
     return fetch(url).then((response) => response.json())
-        .then((response) => Mock.mock(response));
+        .then((response) => {
+            console.log(response);
+            Mock.mock(response)
+        })
+        .catch((error) => {
+            console.log('fetch:get:' + error)
+        });
 }
 
 request.post = function (url, body) {
