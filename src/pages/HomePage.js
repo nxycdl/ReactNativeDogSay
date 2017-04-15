@@ -50,32 +50,38 @@ export default class index extends Component {
         let name = 'envelope-o';
         name = pos === 'right' ? 'angle-right' : name;
 
-        if (Platform.OS === 'android') {
-            return (
-                <TouchableNativeFeedback onPress={this._quickBarClick.bind(this)} style={styles.btn}>
-                    <View>
-                        <Icon name={name} size={quickBarWidth} color="#fff"/>
-                    </View>
-                </TouchableNativeFeedback>
-            )
-        } else {
-            return (
-                <TouchableOpacity onPress={this._quickBarClick.bind(this)} style={styles.btn}>
-                    <View>
-                        <Icon name={name} size={quickBarWidth} color="#fff"/>
-                    </View>
-                </TouchableOpacity>
-            )
-        }
+        return (<View>
+            <Icon name={name} size={quickBarWidth} color="#fff"/>
+        </View>)
     }
 
 
     _renderQuickMsg() {
-        return (<View style={styles.quickbar}>
-            {this._renderQuickMsgBtn('left')}
-            <Text numberOfLines={1} style={{flex:1,textAlign:'left',fontStyle:'italic'}}>这里放点临时公告</Text>
-            {this._renderQuickMsgBtn('right')}
-        </View>)
+
+        if (Platform.OS === 'android') {
+            return (
+                <TouchableNativeFeedback onPress={this._quickBarClick.bind(this)}>
+                    <View style={styles.quickbar}>
+                        {this._renderQuickMsgBtn('left')}
+                        <Text numberOfLines={1}
+                              style={{flex: 1, textAlign: 'left', fontStyle: 'italic'}}>这里放点临时公告</Text>
+                        {this._renderQuickMsgBtn('right')}
+                    </View>
+                </TouchableNativeFeedback>
+            )
+
+        } else {
+            return (
+                <TouchableOpacity onPress={this._quickBarClick.bind(this)}>
+                    <View style={styles.quickbar}>
+                        {this._renderQuickMsgBtn('left')}
+                        <Text numberOfLines={1}
+                              style={{flex: 1, textAlign: 'left', fontStyle: 'italic'}}>这里放点临时公告</Text>
+                        {this._renderQuickMsgBtn('right')}
+                    </View>
+                </TouchableOpacity>
+            )
+        }
     }
 
     render() {
