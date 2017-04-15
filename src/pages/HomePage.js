@@ -18,8 +18,10 @@ import Item from '../component/Item';
 import px2dp from '../util'
 import request from '../util/request';
 import LawyerSwiper from '../component/LawyerSwiper';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const itemHeight = px2dp(20);
+const quickBarWidth = px2dp(14);
 
 export default class index extends Component {
     constructor(props) {
@@ -40,6 +42,42 @@ export default class index extends Component {
         console.log('_rightPress');
     }
 
+    _quickBarClick() {
+        console.log('quickBarClick');
+    }
+
+    _renderQuickMsgBtn(pos) {
+        let name = 'envelope-o';
+        name = pos === 'right' ? 'angle-right' : name;
+
+        if (Platform.OS === 'android') {
+            return (
+                <TouchableNativeFeedback onPress={this._quickBarClick.bind(this)} style={styles.btn}>
+                    <View>
+                        <Icon name={name} size={quickBarWidth} color="#fff"/>
+                    </View>
+                </TouchableNativeFeedback>
+            )
+        } else {
+            return (
+                <TouchableOpacity onPress={this._quickBarClick.bind(this)} style={styles.btn}>
+                    <View>
+                        <Icon name={name} size={quickBarWidth} color="#fff"/>
+                    </View>
+                </TouchableOpacity>
+            )
+        }
+    }
+
+
+    _renderQuickMsg() {
+        return (<View style={styles.quickbar}>
+            {this._renderQuickMsgBtn('left')}
+            <Text numberOfLines={1} style={{flex:1,textAlign:'left',fontStyle:'italic'}}>这里放点临时公告</Text>
+            {this._renderQuickMsgBtn('right')}
+        </View>)
+    }
+
     render() {
         let rightIcon = (this.state.isLogin === true ? 'ios-log-out' : 'ios-log-in');
         return (
@@ -50,6 +88,7 @@ export default class index extends Component {
                         leftPress={this._leftPress.bind(this)}
                         rightPress={this._rightPress.bind(this)}></NavBar>
                 <MySwiperIndex></MySwiperIndex>
+                {this._renderQuickMsg()}
                 <ScrollView contentContainerStyle={{height: 760}}>
                     <View style={{flex: 1, backgroundColor: '#ADADAD'}}>
                         <View style={styles.imageitem}>
@@ -101,7 +140,6 @@ export default class index extends Component {
     }
 }
 
-
 const styles = StyleSheet.create({
     imageitem: {
         flexDirection: 'row',
@@ -125,5 +163,21 @@ const styles = StyleSheet.create({
     lawyercaption: {
         borderBottomColor: '#bbb',
         borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    quickbar: {
+        height: quickBarWidth,
+        backgroundColor: "#0398ff",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+        paddingHorizontal: px2dp(10)
+    },
+    btn: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
+
 })

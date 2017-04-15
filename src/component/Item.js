@@ -36,7 +36,7 @@ class ItemButton extends Component {
     render() {
         return (
             <Button style={{marginTop: this.props.first ? 10 : 0}} onPress={this.props.onPress}>
-                <View style={[styles.button,{height:this.props.itemHeight||itemHeight}]}>
+                <View style={[styles.button, {height: this.props.itemHeight || itemHeight}]}>
                     <Text style={{color: this.props.color || "#f00"}}>{this.props.name}</Text>
                 </View>
             </Button>
@@ -68,11 +68,12 @@ export default class Item extends Component {
         font = font || "Ionicons"
         const Icon = Font[font]
         return (
-            <View style={[styles.listItem,{height:this.props.itemHeight||itemHeight}]}>
+            <View style={[styles.listItem, {height: this.props.itemHeight || itemHeight}]}>
                 {icon ? (<Icon name={icon} size={px2dp(iconSize || 20)}
                                style={{width: 22, marginRight: 5, textAlign: "center"}}
                                color={color || "#4da6f0"}/>) : null}
-                <View style={[styles.listInfo, {borderTopWidth: !first ? 1 : 0},{height:this.props.itemHeight||itemHeight}]}>
+                <View
+                    style={[styles.listInfo, {borderTopWidth: !first ? 1 : 0}, {height: this.props.itemHeight || itemHeight}]}>
                     <View style={{flex: 1}}><Text>{name}</Text></View>
                     <View style={styles.listInfoRight}>
                         {subName ? (<Text style={{color: "#aaa", fontSize: 12}}>{subName}</Text>) : null}
@@ -101,7 +102,6 @@ export default class Item extends Component {
             <Button style={{marginTop: first ? 10 : 0}} onPress={onPress}>{this._render()}</Button>
     }
 }
-
 
 
 Item.Button = ItemButton
