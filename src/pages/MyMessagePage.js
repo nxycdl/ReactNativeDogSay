@@ -98,6 +98,7 @@ export default class MyMessagePage extends Component {
             .then((data) => {
                 if (data.success === true) {
                     var result = this.state.data;
+                    console.log(data.result);
                     result = data.result.concat(result);
                     this.setState({
                         isRefreshing: false,

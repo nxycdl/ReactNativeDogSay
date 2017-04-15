@@ -33,9 +33,10 @@ export default class LawyerSwiper extends Component {
     _fetchLawerInfoList() {
         request.get('', '/htgl/app/getweixintoplawerinfo.do', {limit: 5})
             .then(data => {
-                console.log('_fetchLawerInfoList',data);
+                console.log('_fetchLawerInfoList', data);
                 if (data.err === '0') {
                     let retlist = data.data;
+                    console.log(retlist);
                     let hotLawyerList = this.state.hotLawyerList;
                     hotLawyerList = hotLawyerList.concat(retlist);
                     this.setState({

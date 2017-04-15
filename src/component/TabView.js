@@ -15,6 +15,7 @@ import FeedBack from '../pages/Feedback' ;
 import HomePage from '../pages/HomePage' ;
 import ChatPage from '../pages/ChatPage' ;
 import My from '../pages/My' ;
+import LoginPage from '../pages/LoginPage';
 
 
 export default class TabView extends Component {
@@ -28,8 +29,8 @@ export default class TabView extends Component {
         this.tabNames = [
             ["首页", "logo-google", "HomePage", <HomePage {...this.props}/>],
             ["反馈", "ios-compass-outline", "FeedBack", <FeedBack {...this.props}/>],
-            ["聊天", "ios-list-box-outline", "ChatPage", <ChatPage {...this.props}/>],
-            ["我的", "ios-contact-outline", "My", <My {...this.props}/>]
+            ["聊天1", "ios-list-box-outline", "ChatPage", <ChatPage {...this.props}/>],
+            ["我的1", "ios-contact-outline", "LoginPage", <LoginPage {...this.props}/>]
         ]
         TabView.hideTabBar = TabView.hideTabBar.bind(this);
         TabView.showTabBar = TabView.showTabBar.bind(this);
@@ -42,6 +43,7 @@ export default class TabView extends Component {
     static hideTabBar(){
         this.setState({hideTabBar: true})
     }
+
 
     render(){
         return (

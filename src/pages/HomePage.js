@@ -9,7 +9,9 @@ import {
     AlertIOS,
     RefreshControl,
     TouchableHighlight,
-    TouchableNativeFeedback
+    TouchableNativeFeedback,
+    Modal,
+    Dimensions
 } from 'react-native'
 
 import MySwiperIndex from '../component/MySwiperIndex';
@@ -18,7 +20,8 @@ import Item from '../component/Item';
 import px2dp from '../util'
 import request from '../util/request';
 import LawyerSwiper from '../component/LawyerSwiper';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
+const {width, height} = Dimensions.get('window');
 
 const itemHeight = px2dp(20);
 const quickBarWidth = px2dp(14);
@@ -30,7 +33,8 @@ export default class index extends Component {
             title: '微建盾欢迎您',
             isLogin: false,
             hotLawyerList: [],
-            infoList: [{}]
+            infoList: [{}],
+            modalVisible: false
         }
     }
 
@@ -44,6 +48,9 @@ export default class index extends Component {
 
     _quickBarClick() {
         console.log('quickBarClick');
+        this.setState({
+            modalVisible: true
+        });
     }
 
     _renderQuickMsgBtn(pos) {
@@ -76,7 +83,12 @@ export default class index extends Component {
                     <View style={styles.quickbar}>
                         {this._renderQuickMsgBtn('left')}
                         <Text numberOfLines={1}
-                              style={{flex: 1, textAlign: 'left', fontStyle: 'italic'}}>这里放点临时公告</Text>
+                              style={{
+                                  flex: 1,
+                                  textAlign: 'left',
+                                  fontStyle: 'italic',
+                                  backgroundColor: ''
+                              }}>这里放点临时公告</Text>
                         {this._renderQuickMsgBtn('right')}
                     </View>
                 </TouchableOpacity>
@@ -141,6 +153,53 @@ export default class index extends Component {
                         </View>
                     </View>
                 </ScrollView>
+                <Modal
+                    animationType={"slide"}
+                    backgroundColor={'red'}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        alert("Modal has been closed.")
+                    }}
+                >
+                    <View style={{
+                        flex: 1,
+                        padding: 20, backgroundColor: '#f5fcff'
+                    }}>
+                        <View>
+                            <Text style={styles.msg_header}>消息头</Text>
+                            <View style={styles.subtext}>
+                                <Text>发布人：xxxx</Text>
+                                <Text>发布时间:201701010101</Text>
+
+                            </View>
+                            <ScrollView>
+                                <Text style={styles.text} selectable={true}>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores consequatur
+                                    debitis dicta dolore dolorem eos ex harum impedit inventore iure, non nulla pariatur
+                                    provident quos repellat sapiente temporibus voluptatibus
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores consequatur
+                                    debitis dicta dolore dolorem eos ex harum impedit inventore iure, non nulla pariatur
+                                    provident quos repellat sapiente temporibus voluptatibus
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores consequatur
+                                    debitis dicta dolore dolorem eos ex harum impedit inventore iure, non nulla pariatur
+                                    provident quos repellat sapiente temporibus voluptatibus
+                                </Text>
+                            </ScrollView>
+                        </View>
+                        <View style={{
+                            position: 'absolute',
+                            bottom: 20,
+                            justifyContent: 'center',
+                            width: width,
+                            alignItems: 'center',
+                            flex: 1
+                        }}>
+                            <TouchableHighlight onPress={() => this.setState({modalVisible:false})}>
+                                <Icon name={'times'} size={44} color="red"/>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         )
     }
@@ -184,6 +243,27 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    msg_header: {
+        fontSize: px2dp(14),
+        height: NavBar.topbarHeight - 10,
+        backgroundColor: "white",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        textAlign: 'center',
+        paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+        paddingHorizontal: px2dp(10)
+    },
+    subtext: {
+        backgroundColor: 'rgba(7,17,27,0.1)',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    text: {
+        marginTop: 10,
+        fontWeight: '500',
+        lineHeight: 20
     }
 
 })
