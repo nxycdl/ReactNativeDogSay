@@ -1,22 +1,102 @@
 /**
  Created by Administrator on 2017-04-16.
  */
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
 import {
     Text,
     View,
-    Image,
     StyleSheet,
-    Platform,
-    ScrollView,
-    AlertIOS,
-    RefreshControl,
-    TouchableHighlight,
-    TouchableNativeFeedback,
-    TextInput
+    TextInput,
+    TouchableOpacity
 } from 'react-native'
+import request from '../util/request';
+import md5 from 'md5';
+import { toastShort } from '../util/ToastUtil';
+const USERINFO = 'userInfo';
 
 export default class LoginPage extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = ({
+            isLoging: false,
+            username: '',
+            userpassword: ''
+        });
+    }
+
+    componentDidMount() {
+        this._isLogin();
+    }
+
+    _isLogin() {
+        storage.load({
+            key: 'userInfo'
+        }).then(ret => {
+            console.log('ret', ret)
+        }).catch(err => {
+            console.log('err', err)
+        })
+    }
+
+
+    /*登陆*/
+    _onLoging() {
+        console.log('_onLoging');
+        /*if (isLoging) {
+         return;
+         }*/
+        this.setState({isLoging: true});
+        var params = {
+            username: this.state.username,
+            userpassword: md5(this.state.userpassword.toString()).toUpperCase(),
+            usertype: '0',
+            openid: '123'
+        }
+        request.postForm('', '/htgl/app/winxinlogininclassapp.do', params)
+            .then((response) => {
+                if (response.err != '0') {
+                    toastShort(response.err);
+                } else {
+                    var userinfo = response.data[0];
+                    var msg1 = response.msg1;
+                    userinfo.msg1 = msg1;
+                    userinfo.tel = "13895652926";
+                    toastShort('登陆成功！');
+                    storage.save({
+                        key: USERINFO,
+                        rawData: userinfo,
+                        expires: 1000 * 3600 * 24 * 7
+                    });
+
+                    // 读取
+                    storage.load({
+                        key: USERINFO,
+                        autoSync: true,
+                        syncInBackground: true,
+                        syncParams: {
+                            extraFetchOptions: {},
+                            someFlag: true,
+                        },
+                    }).then(ret => {
+                        console.log(ret.msg1);
+                        this.setState({user: ret});
+                    }).catch(err => {
+                        console.warn(err.message);
+                        switch (err.name) {
+                            case 'NotFoundError':
+                                break;
+                            case 'ExpiredError':
+                                break;
+                        }
+                    })
+                }
+            }).catch((error) => {
+            console.warn(error);
+            /*Toast.show.bind(null, error);*/
+        })
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -25,17 +105,22 @@ export default class LoginPage extends Component {
                 </View>
                 <View style={styles.marginTopview}/>
                 <View style={styles.inputview}>
-                    <TextInput underlineColorAndroid='transparent' style={styles.textinput} placeholder='QQ号/手机号/邮箱'/>
+                    <TextInput underlineColorAndroid='transparent'
+                               style={styles.textinput}
+                               placeholder='QQ号/手机号/邮箱'
+                               onChangeText={(text) => this.setState({username: text})}/>
                     <View style={styles.dividerview}>
                         <Text style={styles.divider}></Text>
                     </View>
                     <TextInput underlineColorAndroid='transparent' style={styles.textinput} placeholder='密码'
-                               secureTextEntry={true}/>
+                               secureTextEntry={true} onChangeText={(text) => this.setState({userpassword: text})}/>
                 </View>
                 <View style={styles.bottomview}>
-                    <View style={styles.buttonview}>
-                        <Text style={styles.logintext}>登 录</Text>
-                    </View>
+                    <TouchableOpacity onPress={this._onLoging.bind(this)}>
+                        <View style={styles.buttonview}>
+                            <Text style={styles.logintext}>登 录</Text>
+                        </View>
+                    </TouchableOpacity>
                     <View style={styles.bottombtnsview}>
                         <View style={styles.bottomleftbtnview}>
                             <Text style={styles.bottombtn}>无法登录？</Text>

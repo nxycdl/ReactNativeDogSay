@@ -23,9 +23,22 @@ request.get = function (url, path, params) {
         });
 }
 
-request.post = function (url, body) {
+request.postJson = function (url, path, body) {
     url = (url || config.serviceUrl) + path;
-    var options = _.extend(config.header, {body: JSON.stringify(body)});
+    console.log(url);
+    var options = _.extend(config.jsonHeader, {body: JSON.stringify(body)});
+    return fetch(url, options).then((response) => response.json())
+        .then((response) => Mock.mock(response));
+}
+
+request.postForm= function (url, path, body) {
+    url = (url || config.serviceUrl) + path;
+    console.log(url);
+    let formData = new FormData();
+    for(var key in body){
+        formData.append(key,body[key]);
+    }
+    var options = _.extend(config.formHeader, {body: formData});
     return fetch(url, options).then((response) => response.json())
         .then((response) => Mock.mock(response));
 }
