@@ -11,18 +11,20 @@ import {
 } from 'react-native'
 import request from '../util/request';
 import md5 from 'md5';
-import { toastShort } from '../util/ToastUtil';
+import {toastShort} from '../util/ToastUtil';
+import LoadingBar from '../component/LoadingBar'
+import LoadingCircle from '../component/LoadingCircle';
 const USERINFO = 'userInfo';
 
 export default class LoginPage extends Component {
 
     constructor(props) {
         super(props);
-        this.state = ({
+        this.state = {
             isLoging: false,
             username: '',
             userpassword: ''
-        });
+        };
     }
 
     componentDidMount() {
@@ -55,6 +57,7 @@ export default class LoginPage extends Component {
         }
         request.postForm('', '/htgl/app/winxinlogininclassapp.do', params)
             .then((response) => {
+                this.setState({isLoging: false});
                 if (response.err != '0') {
                     toastShort(response.err);
                 } else {
@@ -92,14 +95,21 @@ export default class LoginPage extends Component {
                     })
                 }
             }).catch((error) => {
+            this.setState({isLoging: false});
             console.warn(error);
             /*Toast.show.bind(null, error);*/
         })
     }
 
+
     render() {
         return (
             <View style={styles.container}>
+                {
+                    /*this.state.isLoging == true ? <LoadingBar /> : null*/
+                    this.state.isLoging == true ? <LoadingCircle/> : null
+                }
+
                 <View style={styles.header}>
                     <Text style={styles.headtitle}>添加账号</Text>
                 </View>
