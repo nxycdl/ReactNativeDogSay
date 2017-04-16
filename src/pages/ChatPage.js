@@ -12,7 +12,6 @@ import {
     TouchableNativeFeedback,
     Button
 } from 'react-native'
-import Loading from '../component/LoadingBar';
 export default class ChatPage extends Component {
     constructor(props) {
         super(props)
@@ -29,18 +28,7 @@ export default class ChatPage extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text>UserProfile121212</Text>
-
-                <Button onPress={this._setVisiable.bind(this)}
-                        title="Learn More"
-                        color="#841584"
-                        accessibilityLabel="Learn more about this purple button">
-                </Button>
-
-
-                <Loading modalVisible={this.state.modalVisible}></Loading>
-            </View>
+            <View><Text>this is  a test </Text></View>
         )
     }
 }
