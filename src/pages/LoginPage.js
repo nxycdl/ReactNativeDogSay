@@ -15,11 +15,13 @@ import {toastShort} from '../util/ToastUtil';
 import LoadingBar from '../component/LoadingBar'
 import LoadingCircle from '../component/LoadingCircle';
 const USERINFO = 'userInfo';
+import RootApp from '../root';
 
 export default class LoginPage extends Component {
 
     constructor(props) {
         super(props);
+        console.log('loginpage', props);
         this.state = {
             isLoging: false,
             username: '',
@@ -41,9 +43,58 @@ export default class LoginPage extends Component {
         })
     }
 
+    //登陆成功;
+    _onLogingSuccess() {
+        console.log('success');
+        this.props.afterLogin();
+    }
+
+    _onLoging() {
+        console.log('_onLoging');
+        if (this.state.isLoging) {
+            return;
+        }
+        this.setState({isLoging: true});
+        var params = {
+            userid: this.state.username,
+            password: md5(this.state.userpassword.toString()).toUpperCase(),
+        }
+        request.postJson('http://rapapi.org/mockjs/16792/', 'api/login', params)
+            .then((response) => {
+                let error = response.error;
+                if (response.success == true) {
+                    error = '登陆成功！';
+                }
+                //清除浮层;
+                this.setState({isLoging: false}, () => {
+                    toastShort(error, () => {
+                    });
+                });
+                if (response.success == false) {
+                    return;
+                }
+
+                this.setState({isLoging: false});
+                var userinfo = response.result;
+
+                storage.save({
+                    key: USERINFO,
+                    rawData: userinfo,
+                    expires: 1000 * 3600 * 24 * 7
+                });
+                /*跳转到首页*/
+                this._onLogingSuccess();
+            }).catch((error) => {
+            this.setState({isLoging: false});
+            console.warn(error);
+            /*Toast.show.bind(null, error);*/
+        })
+
+    }
+
 
     /*登陆*/
-    _onLoging() {
+    _onLogingTest() {
         console.log('_onLoging');
         /*if (isLoging) {
          return;

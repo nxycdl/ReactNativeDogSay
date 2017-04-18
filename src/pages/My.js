@@ -22,6 +22,7 @@ import MyMessagePage from './MyMessagePage'
 import px2dp from '../util'
 
 import Icon from 'react-native-vector-icons/Ionicons'
+import LoginPage from "./LoginPage";
 let {width, height} = Dimensions.get('window')
 
 export default class My extends Component {
@@ -29,10 +30,11 @@ export default class My extends Component {
         super(props)
         this.state = {
             isRefreshing: false,
-            avatar:require('../images/index/avatar.jpg')
+            avatar: require('../images/index/avatar.jpg'),
+            isLoging: false
         }
         this.config = [
-            {icon: "md-images", name: "我的消息", subName:"5",onPress: this.goPage.bind(this, "myMessagePage")},
+            {icon: "md-images", name: "我的消息", subName: "5", onPress: this.goPage.bind(this, "myMessagePage")},
             {icon: "ios-heart", name: "我的收藏", color: "#fc7b53"},
             {icon: "logo-usd", name: "最近通知", color: "#fc7b53"},
             {icon: "ios-cart", name: "最近会议", subName: "", color: "#94d94a"},
@@ -71,7 +73,19 @@ export default class My extends Component {
     }
 
     componentDidMount() {
-        this._onRefresh()
+        this._onRefresh();
+        this._checkIsLogin();
+    }
+
+    _checkIsLogin() {
+        storage.load({
+            key: 'userInfo'
+        }).then(ret => {
+            console.log('_checkIsLogin', ret);
+            this.setState({isLoging: true});
+        }).catch(err => {
+            console.log('err', err)
+        })
     }
 
     _onRefresh() {
@@ -90,7 +104,16 @@ export default class My extends Component {
         })
     }
 
+    _afterLogin() {
+        this.setState({
+            isLoging: true
+        });
+    }
+
     render() {
+        if (!this.state.isLoging) {
+            return <LoginPage afterLogin={this._afterLogin.bind(this)}/>
+        }
         return (
             <View style={{flex: 1, backgroundColor: "#f3f3f3"}}>
                 <NavBar
@@ -121,61 +144,6 @@ export default class My extends Component {
                                 <Icon name="ios-arrow-forward-outline" size={px2dp(22)} color="#fff"/>
                             </View>
                         </TouchableWithoutFeedback>
-                        {/*<View style={styles.numbers}>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.numItem}>
-                                    <Text style={{
-                                        color: "#f90",
-                                        fontSize: 18,
-                                        textAlign: "center",
-                                        fontWeight: "bold"
-                                    }}>{"999999.0元"}</Text>
-                                    <Text style={{
-                                        color: "#333",
-                                        fontSize: 12,
-                                        textAlign: "center",
-                                        paddingTop: 5
-                                    }}>{"余额"}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback>
-                                <View style={[styles.numItem, {
-                                    borderLeftWidth: 1,
-                                    borderLeftColor: "#f5f5f5",
-                                    borderRightWidth: 1,
-                                    borderRightColor: "#f5f5f5"
-                                }]}>
-                                    <Text style={{
-                                        color: "#ff5f3e",
-                                        fontSize: 18,
-                                        textAlign: "center",
-                                        fontWeight: "bold"
-                                    }}>{"1940个"}</Text>
-                                    <Text style={{
-                                        color: "#333",
-                                        fontSize: 12,
-                                        textAlign: "center",
-                                        paddingTop: 5
-                                    }}>{"优惠"}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.numItem}>
-                                    <Text style={{
-                                        color: "#6ac20b",
-                                        fontSize: 18,
-                                        textAlign: "center",
-                                        fontWeight: "bold"
-                                    }}>{"999999分"}</Text>
-                                    <Text style={{
-                                        color: "#333",
-                                        fontSize: 12,
-                                        textAlign: "center",
-                                        paddingTop: 5
-                                    }}>{"积分"}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                        </View>*/}
                         <View>
                             {this._renderListItem()}
                         </View>

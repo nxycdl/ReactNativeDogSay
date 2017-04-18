@@ -21,38 +21,42 @@ import LoginPage from '../pages/LoginPage';
 export default class TabView extends Component {
     constructor(props) {
         super(props);
+        console.log('TabView', this.props)
+        console.log('TabView.currentTab', this.props.currentTab)
         this.state = {
-            currentTab: 'HomePage',
+            currentTab: this.props.currentTab ||'HomePage',
             hideTabBar: false
         };
         //初始化底部按钮;
         this.tabNames = [
             ["首页", "logo-google", "HomePage", <HomePage {...this.props}/>],
             ["反馈", "ios-compass-outline", "FeedBack", <FeedBack {...this.props}/>],
-            ["聊天1", "ios-list-box-outline", "ChatPage", <ChatPage {...this.props}/>],
-            ["我的1", "ios-contact-outline", "LoginPage", <LoginPage {...this.props}/>]
+            ["聊天", "ios-list-box-outline", "ChatPage", <ChatPage {...this.props}/>],
+            ["我的", "ios-contact-outline", "My", <My {...this.props}/>]
         ]
         TabView.hideTabBar = TabView.hideTabBar.bind(this);
         TabView.showTabBar = TabView.showTabBar.bind(this);
     }
+
     //显示TabBar;
-    static showTabBar(){
+    static showTabBar() {
         this.setState({hideTabBar: false})
     }
+
     //关闭TabBar;
-    static hideTabBar(){
+    static hideTabBar() {
         this.setState({hideTabBar: true})
     }
 
 
-    render(){
+    render() {
         return (
             <TabNavigator
                 hidesTabTouch={true}
                 tabBarStyle={[styles.tabbar,
-                    (this.state.hideTabBar?styles.hide:{})
+                    (this.state.hideTabBar ? styles.hide : {})
                 ]}
-                sceneStyle={{ paddingBottom: styles.tabbar.height }}>
+                sceneStyle={{paddingBottom: styles.tabbar.height}}>
                 {
                     this.tabNames.map((item, i) => {
                         return (
@@ -62,9 +66,10 @@ export default class TabView extends Component {
                                 title={item[0]}
                                 selected={this.state.currentTab === item[2]}
                                 selectedTitleStyle={{color: "#3496f0"}}
-                                renderIcon={() => <Icon name={item[1]} size={px2dp(22)} color="#666" />}
-                                renderSelectedIcon={() => <Icon name={item[1].replace(/\-outline$/, "")} size={px2dp(22)} color="#3496f0" />}
-                                onPress={() => this.setState({ currentTab: item[2] })}>
+                                renderIcon={() => <Icon name={item[1]} size={px2dp(22)} color="#666"/>}
+                                renderSelectedIcon={() => <Icon name={item[1].replace(/\-outline$/, "")}
+                                                                size={px2dp(22)} color="#3496f0"/>}
+                                onPress={() => this.setState({currentTab: item[2]})}>
                                 {item[3]}
                             </TabNavigator.Item>
                         )
@@ -78,16 +83,16 @@ export default class TabView extends Component {
 const styles = StyleSheet.create({
     tabbar: {
         height: px2dp(46),
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#fff'
     },
     hide: {
         transform: [
-            {translateX:width}
+            {translateX: width}
         ]
     },
-    tabStyle:{
+    tabStyle: {
         padding: px2dp(4)
     }
 })
