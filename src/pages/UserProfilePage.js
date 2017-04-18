@@ -14,6 +14,7 @@ import {
 import NavBar from '../component/NavBar';
 import Item from '../component/Item';
 import Wrapper from '../component/Wrapper';
+import {USERINFO} from '../util/GlobalType'
 export default class UserProfile extends Component {
     constructor(props) {
         super(props)
@@ -26,11 +27,12 @@ export default class UserProfile extends Component {
     _logout() {
         console.log('_logout');
         storage.remove({
-            key: 'userInfo'
+            key: USERINFO
         });
+        global.userInfo = {};
         this.props.navigator.push({
             component: Wrapper,
-            args:{currentTab:'My'}
+            args: {currentTab: 'My'}
         });
     }
 

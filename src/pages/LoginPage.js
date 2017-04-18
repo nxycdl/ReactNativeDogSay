@@ -14,8 +14,9 @@ import md5 from 'md5';
 import {toastShort} from '../util/ToastUtil';
 import LoadingBar from '../component/LoadingBar'
 import LoadingCircle from '../component/LoadingCircle';
-const USERINFO = 'userInfo';
+import {USERINFO} from '../util/GlobalType'
 import RootApp from '../root';
+
 
 export default class LoginPage extends Component {
 
@@ -35,7 +36,7 @@ export default class LoginPage extends Component {
 
     _isLogin() {
         storage.load({
-            key: 'userInfo'
+            key: USERINFO
         }).then(ret => {
             console.log('ret', ret)
         }).catch(err => {
@@ -75,13 +76,14 @@ export default class LoginPage extends Component {
                 }
 
                 this.setState({isLoging: false});
-                var userinfo = response.result;
-
+                var userinfo = response.result[0];
+                console.log(userinfo);
                 storage.save({
                     key: USERINFO,
                     rawData: userinfo,
                     expires: 1000 * 3600 * 24 * 7
                 });
+                global.userInfo = userinfo;
                 /*跳转到首页*/
                 this._onLogingSuccess();
             }).catch((error) => {

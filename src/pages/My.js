@@ -25,13 +25,19 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import LoginPage from "./LoginPage";
 let {width, height} = Dimensions.get('window')
 
+
 export default class My extends Component {
     constructor(props) {
         super(props)
+        /*let avator = require('../images/index/avatar.jpg');
+         if (global.userInfo.avatar) {
+         avator = {uri: global.userInfo.avatar}
+         }*/
+
         this.state = {
             isRefreshing: false,
-            avatar: require('../images/index/avatar.jpg'),
-            isLoging: false
+            isLoging: !_.isEmpty(global.userInfo),
+            userInfo: global.userInfo
         }
         this.config = [
             {icon: "md-images", name: "我的消息", subName: "5", onPress: this.goPage.bind(this, "myMessagePage")},
@@ -73,26 +79,23 @@ export default class My extends Component {
     }
 
     componentDidMount() {
-        this._onRefresh();
-        this._checkIsLogin();
+
     }
 
-    _checkIsLogin() {
-        storage.load({
-            key: 'userInfo'
-        }).then(ret => {
-            console.log('_checkIsLogin', ret);
-            this.setState({isLoging: true});
-        }).catch(err => {
-            console.log('err', err)
-        })
-    }
 
     _onRefresh() {
-        this.setState({isRefreshing: true});
-        setTimeout(() => {
-            this.setState({isRefreshing: false});
-        }, 1500)
+        /*this.setState({isRefreshing: true});
+         setTimeout(() => {
+         this.setState({isRefreshing: false});
+         }, 1500)*/
+    }
+
+    _filterMobile() {
+        let mobile = this.state.userInfo.mobile || '';
+        if (mobile.length = 11) {
+            mobile = mobile.substr(0, 3) + "****" + mobile.substr(7, 4);
+        }
+        return mobile
     }
 
     _renderListItem() {
@@ -106,12 +109,13 @@ export default class My extends Component {
 
     _afterLogin() {
         this.setState({
-            isLoging: true
+            isLoging: true,
+            userInfo: global.userInfo
         });
     }
 
     render() {
-        if (!this.state.isLoging) {
+        if (_.isEmpty(global.userInfo)) {
             return <LoginPage afterLogin={this._afterLogin.bind(this)}/>
         }
         return (
@@ -130,14 +134,22 @@ export default class My extends Component {
                         <TouchableWithoutFeedback onPress={this.goProfile.bind(this)}>
                             <View style={styles.userHead}>
                                 <View style={{flex: 1, flexDirection: "row"}}>
-                                    <Image source={this.state.avatar}
-                                           style={{width: px2dp(60), height: px2dp(60), borderRadius: px2dp(30)}}/>
+                                    <Image
+                                        source={global.userInfo.avatar ? {uri: global.userInfo.avatar} : (require('../images/index/avatar.jpg'))}
+                                        style={{width: px2dp(60), height: px2dp(60), borderRadius: px2dp(30)}}/>
                                     <View style={{flex: 1, marginLeft: 10, paddingVertical: 5}}>
-                                        <Text style={{color: "#fff", fontSize: px2dp(18)}}>_平行时空</Text>
+                                        <Text style={{
+                                            color: "#fff",
+                                            fontSize: px2dp(18)
+                                        }}>{this.state.userInfo.username || '请设置您的用户名!'}</Text>
                                         <View style={{marginTop: px2dp(10), flexDirection: "row"}}>
                                             <Icon name="ios-phone-portrait-outline" size={px2dp(14)} color="#fff"/>
                                             <Text
-                                                style={{color: "#fff", fontSize: 13, paddingLeft: 5}}>135****0418</Text>
+                                                style={{
+                                                    color: "#fff",
+                                                    fontSize: 13,
+                                                    paddingLeft: 5
+                                                }}>{this._filterMobile()}</Text>
                                         </View>
                                     </View>
                                 </View>
