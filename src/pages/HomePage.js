@@ -109,7 +109,7 @@ export default class index extends Component {
                 <ScrollView >
                     <MySwiperIndex></MySwiperIndex>
                     {this._renderQuickMsg()}
-                    <View style={{flex: 1, backgroundColor: '#ADADAD'}}>
+                    <View style={{flex: 1, backgroundColor: '#F0FFFF'}}>
                         <View style={styles.imageitem}>
                             <View style={{backgroundColor: 'white'}}>
                                 <Image source={require('../images/index/f1.png')} style={styles.baseimage}/>
@@ -145,13 +145,19 @@ export default class index extends Component {
                                   itemHeight={px2dp(20)}></Item>
                         </View>
                         <View style={{backgroundColor: 'white', marginTop: 1, height: px2dp(100)}}>
-                            {/*<LawyerSwiper imageList={this.state.hotLawyerList} itemHeight={px2dp(80)}></LawyerSwiper>*/}
                             <LawyerSwiper {...this.props} ></LawyerSwiper>
                         </View>
                         <View style={styles.footer}>
-                            <Text style={styles.footerText}>君子不立危险墙之下</Text>
-                            <Text style={styles.footerText}>@xxxxxxx宁夏xxxxx公司</Text>
+                            <Text style={styles.footerText}>君子不立危险墙之下1</Text>
+                            <Text style={styles.footerText}>@xxxxxxx宁夏xxxxx公司1</Text>
                         </View>
+                        <View style={styles.footer}>
+
+                        </View>
+                        <View style={styles.footer}>
+
+                        </View>
+
                     </View>
 
                 <Modal

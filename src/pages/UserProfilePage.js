@@ -16,6 +16,8 @@ import Item from '../component/Item';
 import Wrapper from '../component/Wrapper';
 import {USERINFO} from '../util/GlobalType';
 import ChangePwdPage from '../pages/ChangePwdPage';
+import AccountPage from '../pages/AccountPage';
+import AboutPage from './AboutPage';
 export default class UserProfile extends Component {
     constructor(props) {
         super(props)
@@ -44,6 +46,12 @@ export default class UserProfile extends Component {
         });
     }
 
+    _goToAccount(){
+        this.props.navigator.push({
+            component: AccountPage
+        });
+    }
+
 
     render() {
         return (
@@ -54,9 +62,10 @@ export default class UserProfile extends Component {
                     leftPress={this.back.bind(this)}
                 />
                 <ScrollView>
+                    <Item name="账号与安全" first={true} subName ="已保护"onPress={this._goToAccount.bind(this)}/>
                     <Item name="修改密码" first={true} onPress={this._changePwd.bind(this)}/>
                     <Item name="通用"/>
-                    <Item name="关于我们" first={true}/>
+                    <Item name="关于我们" first={true} onPress={()=>{this.props.navigator.push({component: AboutPage})}}/>
                     <Item.Button name="退出登录" first={true} onPress={this._logout.bind(this)}/>
                 </ScrollView>
             </View>
