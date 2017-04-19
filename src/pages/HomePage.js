@@ -105,9 +105,10 @@ export default class index extends Component {
                         rightIcon={rightIcon}
                         leftPress={this._leftPress.bind(this)}
                         rightPress={this._rightPress.bind(this)}></NavBar>
-                <MySwiperIndex></MySwiperIndex>
-                {this._renderQuickMsg()}
-                <ScrollView contentContainerStyle={{height: 760}}>
+
+                <ScrollView >
+                    <MySwiperIndex></MySwiperIndex>
+                    {this._renderQuickMsg()}
                     <View style={{flex: 1, backgroundColor: '#ADADAD'}}>
                         <View style={styles.imageitem}>
                             <View style={{backgroundColor: 'white'}}>
@@ -152,7 +153,7 @@ export default class index extends Component {
                             <Text style={styles.footerText}>@xxxxxxx宁夏xxxxx公司</Text>
                         </View>
                     </View>
-                </ScrollView>
+
                 <Modal
                     animationType={"slide"}
                     backgroundColor={'red'}
@@ -200,6 +201,7 @@ export default class index extends Component {
                         </View>
                     </View>
                 </Modal>
+                </ScrollView>
             </View>
         )
     }

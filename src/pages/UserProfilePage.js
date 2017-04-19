@@ -14,7 +14,8 @@ import {
 import NavBar from '../component/NavBar';
 import Item from '../component/Item';
 import Wrapper from '../component/Wrapper';
-import {USERINFO} from '../util/GlobalType'
+import {USERINFO} from '../util/GlobalType';
+import ChangePwdPage from '../pages/ChangePwdPage';
 export default class UserProfile extends Component {
     constructor(props) {
         super(props)
@@ -36,6 +37,13 @@ export default class UserProfile extends Component {
         });
     }
 
+    _changePwd(){
+        this.props.navigator.push({
+            component: ChangePwdPage,
+            args: {currentTab: 'My'}
+        });
+    }
+
 
     render() {
         return (
@@ -46,7 +54,7 @@ export default class UserProfile extends Component {
                     leftPress={this.back.bind(this)}
                 />
                 <ScrollView>
-                    <Item name="账户安全" first={true}/>
+                    <Item name="修改密码" first={true} onPress={this._changePwd.bind(this)}/>
                     <Item name="通用"/>
                     <Item name="关于我们" first={true}/>
                     <Item.Button name="退出登录" first={true} onPress={this._logout.bind(this)}/>

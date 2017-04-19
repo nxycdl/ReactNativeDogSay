@@ -23,8 +23,10 @@ import px2dp from '../util'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import LoginPage from "./LoginPage";
+import ImagePicker from 'react-native-image-picker';
 let {width, height} = Dimensions.get('window')
-
+import {USERINFO} from '../util/GlobalType';
+import request from '../util/request';
 
 export default class My extends Component {
     constructor(props) {
@@ -114,6 +116,77 @@ export default class My extends Component {
         });
     }
 
+
+    _changeAvatar(event) {
+        var _this = event;
+        /**
+         * The first arg is the options object for customization (it can also be null or omitted for default options),
+         * The second arg is the callback which sends object: response (more info below in README)
+         */
+
+        /**
+         * 摄像机默认属性;
+         * @type {{title: string, customButtons: [*], storageOptions: {skipBackup: boolean, path: string}}}
+         */
+        var options = {
+            title: '',
+            cancelButtonTitle: '取消',
+            takePhotoButtonTitle: '拍照',
+            chooseFromLibraryButtonTitle: '从相册选择',
+            storageOptions: {
+                skipBackup: false,
+                path: 'images'
+            }
+        };
+
+
+
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                let uri = response.uri;
+                //post 到服务器上面;
+                request.postJson(' http://rapapi.org/mockjs/16792/','api/changeAvatar')
+                    .then((response) => {
+                        let error = response.error;
+
+                        if (response.success == false) {
+                            toastShort(error, () => {
+                            });
+                            return;
+                        }
+
+                        let uri = response.result[0].uri;
+                        global.userInfo.avatar = uri;
+                        console.log(uri);
+                        storage.save({
+                            key: USERINFO,
+                            rawData: global.userInfo,
+                            expires: 1000 * 3600 * 24 * 7
+                        });
+                        this.setState({
+
+                        });
+                    }).catch((error) => {
+                    this.setState({isLoging: false});
+                    console.warn(error);
+                    /*Toast.show.bind(null, error);*/
+                })
+
+            }
+        });
+    }
+
     render() {
         if (_.isEmpty(global.userInfo)) {
             return <LoginPage afterLogin={this._afterLogin.bind(this)}/>
@@ -134,9 +207,11 @@ export default class My extends Component {
                         <TouchableWithoutFeedback onPress={this.goProfile.bind(this)}>
                             <View style={styles.userHead}>
                                 <View style={{flex: 1, flexDirection: "row"}}>
-                                    <Image
-                                        source={global.userInfo.avatar ? {uri: global.userInfo.avatar} : (require('../images/index/avatar.jpg'))}
-                                        style={{width: px2dp(60), height: px2dp(60), borderRadius: px2dp(30)}}/>
+                                    <TouchableOpacity onPress={this._changeAvatar.bind(this)}>
+                                        <Image
+                                            source={global.userInfo.avatar ? {uri: global.userInfo.avatar} : (require('../images/index/avatar.jpg'))}
+                                            style={{width: px2dp(60), height: px2dp(60), borderRadius: px2dp(30)}}/>
+                                    </TouchableOpacity>
                                     <View style={{flex: 1, marginLeft: 10, paddingVertical: 5}}>
                                         <Text style={{
                                             color: "#fff",

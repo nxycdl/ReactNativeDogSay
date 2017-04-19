@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {
     View,
     StyleSheet,
-    Platform
+    Platform,
+    BackAndroid
 } from 'react-native'
 import Navigation from './app'
 import SplashScreen from 'react-native-splash-screen';
@@ -18,9 +19,12 @@ export default class rootApp extends Component {
         }).then(ret => {
             global.userInfo = ret;
         }).catch(err => {
-            global.userInfo ={};
+            global.userInfo = {};
             console.warn('err', err)
         })
+        /*storage.remove({
+            key: USERINFO
+        });*/
     }
 
 
