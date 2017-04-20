@@ -18,10 +18,9 @@ import MySwiperIndex from '../component/MySwiperIndex';
 import NavBar from '../component/NavBar';
 import Item from '../component/Item';
 import px2dp from '../util'
-// import request from '../util/request';
-// import LawyerSwiper from '../component/LawyerSwiper';
+import request from '../util/request';
+import LawyerSwiper from '../component/LawyerSwiper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import NewsItem from "../component/NewsItem";
 const {width, height} = Dimensions.get('window');
 
 const itemHeight = px2dp(20);
@@ -107,12 +106,59 @@ export default class index extends Component {
                         leftPress={this._leftPress.bind(this)}
                         rightPress={this._rightPress.bind(this)}></NavBar>
 
-
-                <MySwiperIndex></MySwiperIndex>
-                {/*{this._renderQuickMsg()}*/}
                 <ScrollView >
-                    <NewsItem {...this.props}/>
-                </ScrollView>
+                    <MySwiperIndex></MySwiperIndex>
+                    {this._renderQuickMsg()}
+                    <View style={{flex: 1, backgroundColor: '#F0FFFF'}}>
+                        <View style={styles.imageitem}>
+                            <View style={{backgroundColor: 'white'}}>
+                                <Image source={require('../images/index/f1.png')} style={styles.baseimage}/>
+                                <Text style={{textAlign: 'center'}}>我的合同</Text>
+                            </View>
+                            <View style={{backgroundColor: 'white'}}>
+                                <Image source={require('../images/index/f2.png')} style={styles.baseimage}/>
+                                <Text style={{textAlign: 'center'}}>我的消息</Text>
+                            </View>
+                            <View style={{backgroundColor: 'white'}}>
+                                <Image source={require('../images/index/f3.png')} style={styles.baseimage}/>
+                                <Text style={{textAlign: 'center'}}>新手导航</Text>
+                            </View>
+
+                        </View>
+                        <View style={[styles.imageitem, {marginTop: 5, marginBottom: 10}]}>
+                            <View style={{backgroundColor: 'white'}}>
+                                <Image source={require('../images/index/f4.png')} style={styles.baseimage}/>
+                                <Text style={{textAlign: 'center'}}>建盾内刊</Text>
+                            </View>
+                            <View style={{backgroundColor: 'white'}}>
+                                <Image source={require('../images/index/f5.png')} style={styles.baseimage}/>
+                                <Text style={{textAlign: 'center'}}>体检建盾</Text>
+                            </View>
+                            <View style={{backgroundColor: 'white'}}>
+                                <Image source={require('../images/index/f6.png')} style={styles.baseimage}/>
+                                <Text style={{textAlign: 'center'}}>建盾社区</Text>
+                            </View>
+
+                        </View>
+                        <View style={styles.lawyercaption}>
+                            <Item key={0} icon="md-contacts" name="律师团队" subName="更多" color="#fc7b53"
+                                  itemHeight={px2dp(20)}></Item>
+                        </View>
+                        <View style={{backgroundColor: 'white', marginTop: 1, height: px2dp(100)}}>
+                            <LawyerSwiper {...this.props} ></LawyerSwiper>
+                        </View>
+                        <View style={styles.footer}>
+                            <Text style={styles.footerText}>君子不立危险墙之下1</Text>
+                            <Text style={styles.footerText}>@xxxxxxx宁夏xxxxx公司1</Text>
+                        </View>
+                        <View style={styles.footer}>
+
+                        </View>
+                        <View style={styles.footer}>
+
+                        </View>
+
+                    </View>
 
                 <Modal
                     animationType={"slide"}
@@ -135,16 +181,13 @@ export default class index extends Component {
                             </View>
                             <ScrollView>
                                 <Text style={styles.text} selectable={true}>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                    Amet asperiores consequatur
+                                    &nbsp;&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores consequatur
                                     debitis dicta dolore dolorem eos ex harum impedit inventore iure, non nulla pariatur
                                     provident quos repellat sapiente temporibus voluptatibus
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores
-                                    consequatur
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores consequatur
                                     debitis dicta dolore dolorem eos ex harum impedit inventore iure, non nulla pariatur
                                     provident quos repellat sapiente temporibus voluptatibus
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores
-                                    consequatur
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores consequatur
                                     debitis dicta dolore dolorem eos ex harum impedit inventore iure, non nulla pariatur
                                     provident quos repellat sapiente temporibus voluptatibus
                                 </Text>
@@ -158,13 +201,13 @@ export default class index extends Component {
                             alignItems: 'center',
                             flex: 1
                         }}>
-                            <TouchableHighlight onPress={() => this.setState({modalVisible: false})}>
+                            <TouchableHighlight onPress={() => this.setState({modalVisible:false})}>
                                 <Icon name={'times'} size={44} color="red"/>
                             </TouchableHighlight>
                         </View>
                     </View>
                 </Modal>
-
+                </ScrollView>
             </View>
         )
     }

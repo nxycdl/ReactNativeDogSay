@@ -13,7 +13,7 @@ let {width, height} = Dimensions.get('window')
 
 import FeedBack from '../pages/Feedback' ;
 import HomePage from '../pages/HomePage' ;
-import ChatPage from '../pages/ChatPage' ;
+import ProjectPage from '../pages/ProjectPage' ;
 import My from '../pages/My' ;
 import LoginPage from '../pages/LoginPage';
 
@@ -29,9 +29,9 @@ export default class TabView extends Component {
         };
         //初始化底部按钮;
         this.tabNames = [
-            ["首页", "logo-google", "HomePage", <HomePage {...this.props}/>],
+            ["首页", "ios-home", "HomePage", <HomePage {...this.props}/>],
             ["反馈", "ios-compass-outline", "FeedBack", <FeedBack {...this.props}/>],
-            ["聊天", "ios-list-box-outline", "ChatPage", <ChatPage {...this.props}/>],
+            ["项目", "ios-cube", "ProjectPage", <ProjectPage {...this.props}/>],
             ["我的", "ios-contact-outline", "My", <My {...this.props}/>]
         ]
         TabView.hideTabBar = TabView.hideTabBar.bind(this);
